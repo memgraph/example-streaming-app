@@ -20,13 +20,25 @@ function createConsumer(onData) {
 
 async function runConsumer() {
   const consumer = await createConsumer(async ({ key, value, partition, offset }) => {
+    // TODO(gitbuda): Handle errors from createConsumer::onData function.
     console.log(`Consumed record with: \
                  \n  - key ${key} \
                  \n  - value ${value} \
                  \n  - partition ${partition} \
                  \n  - offset ${offset}. \
                  \nUpdated total count to ${++kafkaCounter}`);
-	await session.run(`CREATE (n:Node {message: \"${value}\"});`);
+    [type, ...rest] = value.toString().split('|');
+	if (type === 'node') {
+	  const [label, unique_fields, fields] = rest;
+	  const all_fields = unique_fields.concat(",", fields);
+	  await session.run(`CREATE (n:${label} {${all_fields}});`);
+	} else if (type === 'edge') {
+	  const [n1l, n1u, n2l, n2u, edge_type, edge_fields] = rest;
+	  await session.run(`MATCH (n1:${n1l} {${n1u}}) MATCH (n2:${n2l} {${n2u}}) \
+	                     CREATE (n1)-[:${edge_type} {${edge_fields}}]->(n2);`);
+	} else {
+	  throw Error('Unknown message type');
+    }
   });
   consumer.subscribe(['node_minimal']);
   consumer.consume();
