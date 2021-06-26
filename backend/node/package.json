@@ -1,0 +1,17 @@
+{
+  "name": "node-minimal-streaming-app",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "jest": "^27.0.5"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
