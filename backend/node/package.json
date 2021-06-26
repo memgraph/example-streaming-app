@@ -4,12 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "eslintjs": "npx eslint -c .eslintrc.js './{src,test}/**/*.js'",
+    "eslintjs:fix": "npx eslint -c .eslintrc.js --fix './{src,test}/**/*.js'",
+    "test": "npx jest"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "jest": "^27.0.5"
+    "eslint": "^7.29.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.5",
+    "prettier": "^2.3.1"
   },
   "dependencies": {
     "express": "^4.17.1"
