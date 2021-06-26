@@ -6,8 +6,8 @@ const kafka = require('node-rdkafka');
 let kafkaCounter = 0;
 
 const memgraph = require('neo4j-driver');
-const driver = memgraph.driver('bolt://localhost:7687', memgraph.auth.basic('', ''))
-const session = driver.session()
+const driver = memgraph.driver('bolt://localhost:7687', memgraph.auth.basic('', ''));
+const session = driver.session();
 
 function createConsumer(onData) {
   // Kafka consumer is not created if group.id is not present.
@@ -27,17 +27,17 @@ async function runConsumer() {
                  \n  - partition ${partition} \
                  \n  - offset ${offset}. \
                  \nUpdated total count to ${++kafkaCounter}`);
-    [type, ...rest] = value.toString().split('|');
-	if (type === 'node') {
-	  const [label, unique_fields, fields] = rest;
-	  const all_fields = unique_fields.concat(",", fields);
-	  await session.run(`CREATE (n:${label} {${all_fields}});`);
-	} else if (type === 'edge') {
-	  const [n1l, n1u, n2l, n2u, edge_type, edge_fields] = rest;
-	  await session.run(`MATCH (n1:${n1l} {${n1u}}) MATCH (n2:${n2l} {${n2u}}) \
-	                     CREATE (n1)-[:${edge_type} {${edge_fields}}]->(n2);`);
-	} else {
-	  throw Error('Unknown message type');
+    const [type, ...rest] = value.toString().split('|');
+    if (type === 'node') {
+      const [label, uniqueFields, fields] = rest;
+      const allFields = uniqueFields.concat(',', fields);
+      await session.run(`CREATE (n:${label} {${allFields}});`);
+    } else if (type === 'edge') {
+      const [n1l, n1u, n2l, n2u, edgeType, edgeFields] = rest;
+      await session.run(`MATCH (n1:${n1l} {${n1u}}) MATCH (n2:${n2l} {${n2u}}) \
+                         CREATE (n1)-[:${edgeType} {${edgeFields}}]->(n2);`);
+    } else {
+      throw Error('Unknown message type');
     }
   });
   consumer.subscribe(['node_minimal']);
@@ -45,7 +45,7 @@ async function runConsumer() {
   process.on('SIGINT', async () => {
     console.log('\nDisconnecting consumer...');
     consumer.disconnect();
-	await driver.close()
+    await driver.close();
     process.exit(0);
   });
 }
