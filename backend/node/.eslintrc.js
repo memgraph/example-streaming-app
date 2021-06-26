@@ -18,6 +18,9 @@ module.exports = {
     'jest',
     'prettier',
   ],
+  'parserOptions': {
+    'ecmaVersion': 8
+  },
   'rules': {
     'prettier/prettier': [
       'error',
