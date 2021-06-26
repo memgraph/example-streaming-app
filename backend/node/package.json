@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "neo4j-driver": "^4.3.1",
     "node-rdkafka": "^2.10.1"
   }
 }
