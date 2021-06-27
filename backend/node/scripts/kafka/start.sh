@@ -40,6 +40,11 @@ case "$action" in
         ./kafka-server-start.sh "$kafka_config"
     ;;
 
+    load_data)
+        cd "$kafka_dir/bin" || help_and_exit
+        ./kafka-console-producer.sh --topic "$topic_name" --broker-list "$kafka_endpoint" < "$script_dir/data/simple.txt"
+    ;;
+
     producer)
         cd "$kafka_dir/bin" || help_and_exit
         ./kafka-console-producer.sh --topic "$topic_name" --bootstrap-server "$kafka_endpoint"

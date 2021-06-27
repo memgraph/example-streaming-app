@@ -7,7 +7,6 @@ let kafkaCounter = 0;
 
 const memgraph = require('neo4j-driver');
 const driver = memgraph.driver('bolt://localhost:7687', memgraph.auth.basic('', ''));
-const session = driver.session();
 
 function createConsumer(onData) {
   // Kafka consumer is not created if group.id is not present.
@@ -28,6 +27,7 @@ async function runConsumer() {
                  \n  - offset ${offset}. \
                  \nUpdated total count to ${++kafkaCounter}`);
     const [type, ...rest] = value.toString().split('|');
+    const session = driver.session();
     if (type === 'node') {
       const [label, uniqueFields, fields] = rest;
       const allFields = uniqueFields.concat(',', fields);
@@ -55,9 +55,15 @@ runConsumer().catch((err) => {
   process.exit(1);
 });
 
-app.get('/', (req, res) => {
-  console.log('New incoming request...');
-  res.send(`Hello streaming data sources! I've received ${kafkaCounter} Kafka messages so far :D`);
+app.get('/', async (req, res) => {
+  const session = driver.session();
+  const allNeighborsCount = await session.run(`CALL neighbors.get_count() YIELD * RETURN *;`);
+  const allNeighborsCountStr = allNeighborsCount.records
+    .map((r) => r.get('id').toString() + ': ' + r.get('count').toString())
+    .join(', ');
+  res.send(`<h3>Hello streaming data sources!</h3>\
+            <p>I've received ${kafkaCounter} Kafka messages so far :D</p>\
+            <p>All neighbors count: <b>${allNeighborsCountStr}</b></p>`);
 });
 
 app.listen(port, () => {
