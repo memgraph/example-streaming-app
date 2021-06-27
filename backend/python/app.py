@@ -17,12 +17,9 @@ from gqlalchemy import Memgraph
 from kafka import KafkaConsumer
 
 
-def prepare(message):
-    return message.value.decode('utf-8')
-
-
 def process(message, db):
-    command, *payload = message
+    payload = next(csv.reader([message], delimiter='|'))
+    command, *payload = payload
 
     if command == 'node':
         label, unique_fields, fields = payload
@@ -46,11 +43,7 @@ def process(message, db):
         )
     else:
         raise ValueError(f'Command `{command}` not recognized.')
-
-    logging.info(
-        '`' + '|'.join(message)
-        + '`, Successfully entered {command} in Memgraph.'
-    )
+    logging.info(f'`{message}`, Successfully entered {command} in Memgraph.')
 
 
 if __name__ == '__main__':
@@ -67,11 +60,12 @@ if __name__ == '__main__':
         bootstrap_servers=['localhost:9092']
     )
     try:
-        for message in csv.reader(map(prepare, consumer), delimiter='|'):
+        for message in consumer:
+            message = message.value.decode('utf-8')
             try:
                 process(message, db)
             except Exception as error:
-                logging.error('`' + '|'.join(message) + '`, ' + repr(error))
+                logging.error(f'`{message}`, {repr(error)}')
                 continue
 
     except KeyboardInterrupt:
