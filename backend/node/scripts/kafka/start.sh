@@ -3,7 +3,7 @@
 # TODO(gitbuda): Replace Kafka start script with something any user can start.
 
 help_and_exit () {
-    echo "USAGE: $0 kafka_git_clone_dir build|zookeeper"
+    echo "USAGE: $0 build|consumer|kafka|producer|topic|zookeeper"
     exit 1
 }
 

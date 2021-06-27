@@ -1,0 +1,4 @@
+CREATE TRIGGER neighbors_count ON --> CREATE
+AFTER COMMIT EXECUTE
+UNWIND createdEdges AS createdEdge
+CALL neighbors.store_count(startNode(createdEdge), degree(startNode(createdEdge))) YIELD * RETURN *;
