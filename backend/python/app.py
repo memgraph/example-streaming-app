@@ -54,7 +54,7 @@ if __name__ == '__main__':
         format='%(levelname)s: %(asctime)s %(message)s'
     )
     db = Memgraph()
-    # db.drop_database()
+    db.drop_database()
     consumer = KafkaConsumer(
         'topic',
         bootstrap_servers=['localhost:9092']
