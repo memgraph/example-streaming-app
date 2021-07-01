@@ -2,12 +2,14 @@
 This is a generic Kafka Consumer that will enable you to store data from Kafka
 to Memgraph.
 The data pushed to Kafka has to be in the following format:
-    node|label|unique_fields|fields
-    edge|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
+    command|label|unique_fields|fields
+    command|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
 
-label - a string: `Person`
-edge_type - a string: `CONNECTED_WITH`
-fields - a string in form of a json/python dictionary:
+command - string: "edge", or "node"
+label - string: type(s) of a node e.g. "Person", or "Machine:Vehicle:Car"
+edge_type - string: type of an edge e.g. "CONNECTED_WITH"
+fields - string in form of a json/python dictionary representing the
+         properties of a node or edge:
     `{age: 53}` or `{id: 4, name: "hero", alive: true}`
 """
 import csv
@@ -17,7 +19,21 @@ from gqlalchemy import Memgraph
 from kafka import KafkaConsumer
 
 
-def process(message, db):
+def process(message: str, db: Memgraph):
+    """Takes graph database `db` and a string message in the following format:
+
+    command|label|unique_fields|fields
+    command|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
+
+        command - string: "edge", or "node"
+        label - string: type of a node e.g. "Person" or "Machine:Vehicle:Car"
+        edge_type - string: type of an edge e.g. "CONNECTED_WITH"
+        fields - string in form of a json/python dictionary representing the
+                properties of a node or edge:
+            `{age: 53}` or `{id: 4, name: "hero", alive: true}`
+
+    Throws a ValueError if the command isn't recognised.
+    """
     payload = next(csv.reader([message], delimiter='|'))
     command, *payload = payload
 
