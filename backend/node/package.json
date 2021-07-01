@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "backend": "node src/index.js",
     "eslintjs": "npx eslint -c .eslintrc.js './{src,test}/**/*.js'",
     "eslintjs:fix": "npx eslint -c .eslintrc.js --fix './{src,test}/**/*.js'",
     "test": "npx jest"
