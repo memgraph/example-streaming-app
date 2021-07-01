@@ -1,6 +1,0 @@
-node|Node|id:1|name: "Node 1"
-node|Node|id:2|name: "Node 2"
-node|Node|id:3|name: "Node 3"
-edge|Node|id:1|Node|id:2|CONNECTED_WITH|
-edge|Node|id:2|Node|id:3|CONNECTED_WITH|
-edge|Node|id:1|Node|id:3|CONNECTED_WITH|
