@@ -1,0 +1,11 @@
+## How it works
+1. A [kafka](https://kafka.apache.org) consumer is started and messages are accepted in a [special format]().
+2. A memgraph client connects to [Memgraph](https://memgraph.com/) on port 7687.
+3. The consumer script parses the messages and inserts data from them to Memgraph using [Cypher](https://opencypher.org/) via the [bolt protocol](https://en.wikipedia.org/wiki/Bolt_\(network_protocol\)).
+
+## How to run
+
+1. Run kafka on port 9092, [instructions]()
+2. Run memgraph on port 7687, [instructions]()
+3. Run the app with `python app.py`
+4. Run a producer, [instructions]()
