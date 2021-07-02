@@ -69,7 +69,7 @@ if __name__ == '__main__':
         level=logging.INFO,
         format='%(levelname)s: %(asctime)s %(message)s'
     )
-    db = Memgraph()
+    db = Memgraph(host='localhost', port=7687)
     db.drop_database()
     consumer = KafkaConsumer(
         'topic',
