@@ -21,8 +21,8 @@ if [ "$#" -eq 2 ]; then
     memgraph_binary_path="$2"
 fi
 
-if [ -f "$script_dir/queries/$action.gql" ]; then
-    cat < "$script_dir/queries/$action.gql" | mgconsole
+if [ -f "$script_dir/queries/$action.cypher" ]; then
+    cat < "$script_dir/queries/$action.cypher" | mgconsole
     exit 0
 fi
 
