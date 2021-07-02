@@ -1,3 +1,18 @@
+/**
+ * This is a generic Kafka Consumer that will enable you to store data from
+ * Kafka to Memgraph.
+ *
+ * The data pushed to Kafka has to be in the following format:
+ *   command|label|unique_fields|fields
+ *   command|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
+ *
+ * command - string: "edge", or "node"
+ * label - string: type(s) of a node e.g. "Person", or "Machine:Vehicle:Car"
+ * edge_type - string: type of an edge e.g. "CONNECTED_WITH"
+ * fields - string in form of a json/python dictionary representing the
+ *          properties of a node or edge:
+ *   `{age: 53}` or `{id: 4, name: "hero", alive: true}`
+ */
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -15,14 +30,16 @@ process.on('SIGINT', async () => {
 function createConsumer(onData) {
   return new Promise((resolve, reject) => {
     const client = new kafka.KafkaClient({ kafkaHost: 'localhost:9092' });
-    const consumer = new kafka.Consumer(client, [{ topic: 'node_minimal' }]);
+    const consumer = new kafka.Consumer(client, [{ topic: 'topic' }]);
     consumer.on('message', onData);
     resolve(consumer);
   });
 }
 
-// Adds catch to the wrapped function.
-// Convenient to use when the error just has to be console logged.
+/**
+ * Adds catch to the wrapped function.
+ * Convenient to use when the error just has to be console logged.
+ */
 const consoleErrorWrap =
   (fn) =>
   (...args) =>
@@ -60,8 +77,10 @@ runConsumer().catch((err) => {
   process.exit(1);
 });
 
-// Adds catch to the wrapped function.
-// Convenient to use with Express callbacks.
+/**
+ * Adds catch to the wrapped function.
+ * Convenient to use with Express callbacks.
+ */
 const expressErrorWrap =
   (fn) =>
   (...args) =>

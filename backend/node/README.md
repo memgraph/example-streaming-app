@@ -1,32 +1,19 @@
 # Node.js Minimal Streaming App
 
-## Memghraph
+## How it works
 
-```bash
-cd memgraph
-./run.sh memgraph
-./run.sh create_trigger
-```
+1. A [kafka](https://kafka.apache.org) consumer is started and messages are
+   accepted in a [special format](../../kafka).
+2. A memgraph client connects to [Memgraph](https://memgraph.com/) on port
+   7687.
+3. The consumer script parses the messages and inserts data from them to
+   Memgraph using [Cypher](https://opencypher.org/) via the [bolt
+protocol](https://en.wikipedia.org/wiki/Bolt_\(network_protocol\)).
 
-## Kafka
+## How to run
 
-```bash
-cd kafka
-./run.sh build
-./run.sh zookeeper
-./run.sh kafka
-```
-
-## Producer
-
-```bash
-TODO(gitbuda): Start the producer code.
-```
-
-## App
-
-```bash
-cd backend/node
-npm install
-npm run backend
-```
+1. Install dependencies `npm install`
+2. Run kafka on port 9092, [instructions](../../kafka)
+3. Run memgraph on port 7687, [instructions](../../memgraph)
+4. Run the app with `npm run backend`
+5. Run a producer, [instructions](../../kafka/producer)
