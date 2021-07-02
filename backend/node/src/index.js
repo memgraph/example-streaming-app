@@ -15,7 +15,7 @@ process.on('SIGINT', async () => {
 function createConsumer(onData) {
   return new Promise((resolve, reject) => {
     const client = new kafka.KafkaClient({ kafkaHost: 'localhost:9092' });
-    const consumer = new kafka.Consumer(client, [{ topic: 'node_minimal' }]);
+    const consumer = new kafka.Consumer(client, [{ topic: 'topic' }]);
     consumer.on('message', onData);
     resolve(consumer);
   });
