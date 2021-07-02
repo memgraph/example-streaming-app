@@ -5,7 +5,8 @@
 
 ## How to run
 
-1. Run kafka on port 9092, [instructions](../../kafka)
-2. Run memgraph on port 7687, [instructions](../../memgraph)
-3. Run the app with `python app.py`
-4. Run a producer, [instructions](../../kafka/producer)
+1. Install requirements `pip install -r requirements.txt`
+2. Run kafka on port 9092, [instructions](../../kafka)
+3. Run memgraph on port 7687, [instructions](../../memgraph)
+4. Run the app with `python app.py`
+5. Run a producer, [instructions](../../kafka/producer)
