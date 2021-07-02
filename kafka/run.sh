@@ -21,7 +21,7 @@ fi
 zookeeper_config="$kafka_dir/config/zookeeper.properties"
 kafka_config="$kafka_dir/config/server.properties"
 kafka_endpoint="localhost:9092"
-topic_name="node_minimal"
+topic_name="topic"
 
 case "$action" in
     build)
