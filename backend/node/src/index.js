@@ -2,18 +2,22 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const kafka = require('node-rdkafka');
+const kafka = require('kafka-node');
 let kafkaCounter = 0;
 
 const memgraph = require('neo4j-driver');
 const driver = memgraph.driver('bolt://localhost:7687', memgraph.auth.basic('', ''));
+process.on('SIGINT', async () => {
+  await driver.close();
+  process.exit(0);
+});
 
 function createConsumer(onData) {
-  // Kafka consumer is not created if group.id is not present.
-  const consumer = new kafka.KafkaConsumer({ 'group.id': 'kafka', 'metadata.broker.list': 'localhost:9092' });
   return new Promise((resolve, reject) => {
-    consumer.on('ready', () => resolve(consumer)).on('data', onData);
-    consumer.connect();
+    const client = new kafka.KafkaClient({ kafkaHost: 'localhost:9092' });
+    const consumer = new kafka.Consumer(client, [{ topic: 'node_minimal' }]);
+    consumer.on('message', onData);
+    resolve(consumer);
   });
 }
 
@@ -27,7 +31,7 @@ const consoleErrorWrap =
     });
 
 async function runConsumer() {
-  const consumer = await createConsumer(
+  await createConsumer(
     consoleErrorWrap(async ({ key, value, partition, offset }) => {
       console.log(`Consumed record with: \
                  \n  - key ${key} \
@@ -49,14 +53,6 @@ async function runConsumer() {
       }
     }),
   );
-  consumer.subscribe(['node_minimal']);
-  consumer.consume();
-  process.on('SIGINT', async () => {
-    console.log('\nDisconnecting consumer...');
-    consumer.disconnect();
-    await driver.close();
-    process.exit(0);
-  });
 }
 
 runConsumer().catch((err) => {
