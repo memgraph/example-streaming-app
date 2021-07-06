@@ -19,3 +19,17 @@ Then choose a programming language from the list of supported languages and foll
 - [node](./backend/node)
 - [python](./backend/python)
 - [java](./backend/java)
+
+## How does it work *exactly*
+### KafkaProducer
+The *KafkaProducer* in [./kafka/producer](./kafka/producer) creates nodes with a label *Person* that are connected with edges of type *CONNECTED_WITH*.
+In this repository we provide a static producer that reads entries from a file and a stream producer that produces entries every *X* seconds.
+
+### Backend
+The *backend* takes a message at a time from kafka, parses it with a csv parser as a line, converts it into a `openCypher` query and sends it to Memgraph.
+After storing a node in Memgraph the backend asks Memgraph how many adjacent nodes does it have and prints it to the terminal.
+
+### Memgraph
+You can think of Memgraph as two separate components: a storage engine and an algorithm execution engine.
+First we create a [trigger](./memgraph/queries/create_trigger.cypher): an algorithm that will be run every time a node is inserted.
+This algorithm calculates and updates the number of neighbours of each affected node after every query is executed.
