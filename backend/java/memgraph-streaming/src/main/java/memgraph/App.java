@@ -48,11 +48,12 @@ public class App {
                 default:
                   System.out.printf("Error: unknown command `%s`\n",
                                     record.value());
+                  return null;
                 }
+                System.out.printf("%s\n", record.value());
                 return null;
               }
             });
-            System.out.printf("%s\n", record.value());
           });
         }
       }
