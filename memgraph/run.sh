@@ -6,11 +6,11 @@ script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 script_help_and_exit () {
     echo "USAGE: $0 memgraph|init|action"
     echo "    memgraph - starts an instance of Memgraph and runs init"
-    echo "    init - creates indexes, constraints and triggers against running"
+    echo "    init - creates indexes, constraints and triggers on a running"
     echo "           Memgraph instance"
-    echo "    action - is a filename (excluding extension) from queries dir,"
-    echo "             the file contains a query that will be executed"
-    echo "             agains running Memgraph instance"
+    echo "    action - takes a filename (excluding the extension) from the"
+    echo "             queries directory. The file contains a query that will"
+    echo "             be executed in the running Memgraph instance"
     exit 1
 }
 
