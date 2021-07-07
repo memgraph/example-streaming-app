@@ -30,6 +30,7 @@ func main() {
 		MaxBytes: 10e6,
 	})
 	defer kafkaReader.Close()
+kafkaLoop:
 	for {
 		kafkaMessage, err := kafkaReader.ReadMessage(context.Background())
 		if err != nil {
@@ -47,7 +48,7 @@ func main() {
 			cypherCommand = fmt.Sprintf(cypherEdgeCommand, arr[1], arr[2], arr[5], arr[6], arr[3], arr[4])
 		default:
 			fmt.Printf("invalid kafka message: `%s`", message)
-			break
+			break kafkaLoop
 		}
 		err = runCypherCommand(driver, cypherCommand)
 		if err != nil {
