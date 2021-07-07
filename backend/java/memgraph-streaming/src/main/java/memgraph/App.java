@@ -21,18 +21,10 @@ public class App {
                        + "MERGE (node2:%s %s) "
                        + "MERGE (node1)-[:%s %s]->(node2)";
 
-    Driver driver = GraphDatabase.driver("bolt://localhost:7687");
-
-    Properties props = new Properties();
-    props.put("bootstrap.servers", "localhost:9092");
-    props.put("key.deserializer", LongDeserializer.class.getName());
-    props.put("value.deserializer", StringDeserializer.class.getName());
-    props.put("group.id", "MemgraphStreaming");
-    KafkaConsumer<String, String> consumer =
-        new KafkaConsumer<String, String>(props);
-    consumer.subscribe(Arrays.asList("topic"));
-
-    try (Session session = driver.session()) {
+    try (Driver driver = GraphDatabase.driver("bolt://localhost:7687");
+         Session session = driver.session();
+         KafkaConsumer<String, String> consumer = getKafkaConsumer()) {
+      consumer.subscribe(Arrays.asList("topic"));
       while (true) {
         ConsumerRecords<String, String> records =
             consumer.poll(Duration.ofMillis(100));
@@ -55,8 +47,7 @@ public class App {
                   break;
                 default:
                   System.out.printf("Error: unknown command `%s`\n",
-                                    command[0]);
-                  System.out.println(command);
+                                    record.value());
                 }
                 return null;
               }
@@ -65,9 +56,15 @@ public class App {
           });
         }
       }
-    } finally {
-      driver.close();
-      consumer.close();
     }
+  }
+
+  public static KafkaConsumer<String, String> getKafkaConsumer() {
+    Properties props = new Properties();
+    props.put("bootstrap.servers", "localhost:9092");
+    props.put("key.deserializer", LongDeserializer.class.getName());
+    props.put("value.deserializer", StringDeserializer.class.getName());
+    props.put("group.id", "MemgraphStreaming");
+    return new KafkaConsumer<String, String>(props);
   }
 }
