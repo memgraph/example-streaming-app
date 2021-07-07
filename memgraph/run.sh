@@ -4,7 +4,7 @@ set -Eeuo pipefail
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 help_and_exit () {
-    echo "USAGE: $0 memgraph|initialize|action [memgraph_binary_path]"
+    echo "USAGE: $0 memgraph|init|action [memgraph_binary_path]"
     echo "    where action is a filename (excluding extension) from queries dir."
     echo "    default memgraph_binary_path is /usr/lib/memgraph/memgraph"
     exit 1
@@ -40,7 +40,7 @@ case "$action" in
         sudo runuser -l memgraph -c "$memgraph_binary_path --log-level=DEBUG --also-log-to-stderr"
     ;;
 
-    initialize)
+    init)
         execute create_index
         execute create_constraint
         execute create_node_trigger

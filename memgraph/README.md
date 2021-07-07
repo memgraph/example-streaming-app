@@ -14,5 +14,5 @@ The following command creates required indexes, constraints, and triggers.
 Please run the command in additional shell/terminal.
 
 ```bash
-./run.sh initialize
+./run.sh init
 ```
