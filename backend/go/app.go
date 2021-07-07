@@ -45,9 +45,8 @@ func main() {
 			cypherCommand = fmt.Sprintf(cypherNodeCommand, arr[1], arr[2], arr[3])
 		case "edge":
 			cypherCommand = fmt.Sprintf(cypherEdgeCommand, arr[1], arr[2], arr[5], arr[6], arr[3], arr[4])
-		}
-		if cypherCommand == "" {
-			fmt.Println("breaking")
+		default:
+			fmt.Printf("invalid kafka message: `%s`", message)
 			break
 		}
 		err = runCypherCommand(driver, cypherCommand)
