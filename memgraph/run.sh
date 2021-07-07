@@ -20,11 +20,12 @@ memgraph_binary_path="/usr/lib/memgraph/memgraph"
 if [ "$#" -eq 2 ]; then
     memgraph_binary_path="$2"
 fi
+memgraph_docker_image="memgraph/memgraph:latest"
 
 execute () {
     action=$1
     if [ -f "$script_dir/queries/$action.cypher" ]; then
-        cat < "$script_dir/queries/$action.cypher" | mgconsole
+        cat < "$script_dir/queries/$action.cypher" | docker run -i --rm --network host --entrypoint mgconsole "$memgraph_docker_image"
     else
         help_and_exit
     fi
@@ -32,6 +33,10 @@ execute () {
 
 case "$action" in
     memgraph)
+        docker run -it --rm --network host "$memgraph_docker_image"
+    ;;
+
+    memgraph_binary)
         sudo runuser -l memgraph -c "$memgraph_binary_path --log-level=DEBUG --also-log-to-stderr"
     ;;
 
