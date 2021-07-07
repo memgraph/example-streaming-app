@@ -20,6 +20,7 @@ Then choose a programming language from the list of supported languages and foll
 - [python](./backend/python)
 - [java](./backend/java)
 - [go](./backend/go)
+- [c#](./backend/cs)
 
 ## How does it work *exactly*
 ### KafkaProducer
