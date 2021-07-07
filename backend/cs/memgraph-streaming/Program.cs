@@ -41,7 +41,7 @@ namespace memgraph_streaming
               break;
             default:
               throw new InvalidOperationException(
-                string.Format("Command `{}` not supported.", message)
+                string.Format("Command '{0}' not supported.", message)
               );
           }
           System.Console.WriteLine(cypherCommand);
