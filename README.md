@@ -2,7 +2,7 @@
 
 This repository serves as a point of reference when developing a streaming application with [Memgraph](https://memgraph.com) and a message broker such as [Kafka](https://kafka.apache.org).
 
-![drawing](https://i.imgur.com/nXUWuUJ.png)
+![drawing](https://i.imgur.com/nmuJDgd.png)
 
 *KafkaProducer* represents the source of your data.
 That can be transactions, queries, metadata or something different entirely.
