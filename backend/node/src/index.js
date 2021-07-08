@@ -94,7 +94,7 @@ app.get(
     const allNodesStr = allNodes.records
       .map((r) => {
         const node = r.get('n');
-        return node.properties['id'] + ': ' + node.properties['neighbours'];
+        return node.properties['id'] + ': ' + node.properties['neighbors'];
       })
       .join(', ');
     res.send(`<h3>Hello streaming data sources!</h3>\

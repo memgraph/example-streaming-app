@@ -19,7 +19,7 @@ func main() {
 
 	cypherNodeCommand := "MERGE (node:%s %s) " +
 		"SET node += %s"
-	cypherEdgeCommand := "MERGE (node1:%s %s)" +
+	cypherEdgeCommand := "MERGE (node1:%s %s) " +
 		"MERGE (node2:%s %s) " +
 		"MERGE (node1)-[:%s %s]->(node2)"
 
@@ -50,19 +50,36 @@ kafkaLoop:
 			fmt.Printf("invalid kafka message: `%s`", message)
 			break kafkaLoop
 		}
-		err = runCypherCommand(driver, cypherCommand)
+		_, err = runCypherCommand(driver, cypherCommand)
 		if err != nil {
 			panic(err)
+		}
+		if arr[0] == "node" {
+			result, err := runCypherCommand(
+				driver,
+				fmt.Sprintf("MATCH (node:%s %s) RETURN node.neighbors", arr[1], arr[2]),
+			)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Printf("Node (node:%s %s) has %d neighbors.\n", arr[1], arr[2], result)
 		}
 	}
 }
 
-func runCypherCommand(driver neo4j.Driver, cypherCommand string) error {
+func runCypherCommand(driver neo4j.Driver, cypherCommand string) (interface{}, error) {
 	session := driver.NewSession(neo4j.SessionConfig{})
 	defer session.Close()
-	_, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
-		_, err := tx.Run(cypherCommand, map[string]interface{}{})
-		return nil, err
+	result, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+		result, err := tx.Run(cypherCommand, map[string]interface{}{})
+		if err != nil {
+			return nil, err
+		}
+		if result.Next() {
+			return result.Record().Values[0], nil
+		}
+
+		return nil, result.Err()
 	})
-	return err
+	return result, err
 }

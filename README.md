@@ -2,7 +2,7 @@
 
 This repository serves as a point of reference when developing a streaming application with [Memgraph](https://memgraph.com) and a message broker such as [Kafka](https://kafka.apache.org).
 
-![drawing](https://i.imgur.com/nmuJDgd.png)
+![drawing](https://i.imgur.com/BOLVF8t.png)
 
 *KafkaProducer* represents the source of your data.
 That can be transactions, queries, metadata or something different entirely.
@@ -34,4 +34,4 @@ After storing a node in Memgraph the backend asks Memgraph how many adjacent nod
 ### Memgraph
 You can think of Memgraph as two separate components: a storage engine and an algorithm execution engine.
 First we create a [trigger](./memgraph/queries/create_trigger.cypher): an algorithm that will be run every time a node is inserted.
-This algorithm calculates and updates the number of neighbours of each affected node after every query is executed.
+This algorithm calculates and updates the number of neighbors of each affected node after every query is executed.

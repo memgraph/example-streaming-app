@@ -50,6 +50,13 @@ namespace memgraph_streaming
             tx.Run(cypherCommand);
             return "";
           });
+          if (arr[0] == "node") {
+            var neighbors = session.WriteTransaction(tx =>
+            {
+              return tx.Run(string.Format("MATCH (node:{0} {1}) RETURN node.neighbors AS neighbors", arr[1], arr[2])).Peek();
+            });
+            Console.WriteLine(string.Format("Node (node:{0} {1}) has {2} neighbors.", arr[1], arr[2], neighbors.Values["neighbors"]));
+          }
         }
       }
       finally

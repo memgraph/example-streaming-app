@@ -45,7 +45,7 @@ init () {
     execute create_index
     execute create_constraint
     execute create_node_trigger
-    execute create_update_neighbours_trigger
+    execute create_update_neighbors_trigger
 }
 
 case "$action" in
