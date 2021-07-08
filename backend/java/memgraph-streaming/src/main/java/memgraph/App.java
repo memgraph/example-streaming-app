@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.TransactionWork;
@@ -39,6 +40,12 @@ public class App {
                 case "node":
                   tx.run(String.format(nodeQuery, command[1], command[2],
                                        command[3]));
+                  Result result = tx.run(String.format(
+                      "MATCH (node:%s %s) RETURN node.neighbors AS neighbors",
+                      command[1], command[2]));
+                  System.out.printf("Node (node:%s %s) has %d neighbors.\n",
+                                    command[1], command[2],
+                                    result.single().get(0).asInt());
                   break;
                 case "edge":
                   tx.run(String.format(edgeQuery, command[1], command[2],
