@@ -1,13 +1,35 @@
 # How it works
-Downloads and runs Kafka
 
-# How to run
+Downloads and runs Kafka.
+
+## How to run Kafka
+
+Since the current Kafka version requires Zookeeper, both Zookeeper and Kafka
+have to be up and running. The following commands are blocking, so please run
+them in different shells.
+
+Once Kafka is successfully started, we also need to create a topic. The script
+will create a new topic named `topic` or fail if the topic is already there.
+
 ```bash
-bash run.sh
+bash run.sh zookeeper
+bash run.sh kafka
+bash run.sh topic
 ```
-# Special format
+
+If you would like to test Kafka quickly, you could use the following commands
+to start console producer and consumer. NOTE: This part is not required.
+
+```bash
+bash run.sh producer
+bash run.sh consumer
+```
+
+## Special format
+
 Information put to kafka must be in a special format:
-```
+
+```txt
 command|label|unique_fields|fields
 command|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
 ```
