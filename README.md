@@ -1,4 +1,16 @@
-# Minimal Streaming App
+# Minimal Streaming App 🚀🚀
+
+<p align="center">
+    <a href="https://github.com/memgraph/minimal-streaming-app/blob/main/LICENSE" alt="Licence">
+        <img src="https://img.shields.io/github/license/memgraph/minimal-streaming-app" />
+    </a>
+    <a href="https://github.com/memgraph/minimal-streaming-app" alt="Languages">
+        <img src="https://img.shields.io/github/languages/count/memgraph/minimal-streaming-app" />
+    </a>
+    <a href="https://github.com/memgraph/minimal-streaming-app/stargazers" alt="Stargazers">
+        <img src="https://img.shields.io/github/stars/memgraph/minimal-streaming-app?style=social" />
+    </a>
+</p>
 
 This repository serves as a point of reference when developing a streaming application with [Memgraph](https://memgraph.com) and a message broker such as [Kafka](https://kafka.apache.org).
 
