@@ -1,4 +1,4 @@
-# Minimal Streaming App
+# Minimal Streaming App 🚀🚀
 
 <p align="center">
     <a href="https://github.com/memgraph/minimal-streaming-app/blob/main/LICENSE" alt="Licence">
