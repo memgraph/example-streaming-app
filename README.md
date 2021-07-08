@@ -34,4 +34,4 @@ After storing a node in Memgraph the backend asks Memgraph how many adjacent nod
 ### Memgraph
 You can think of Memgraph as two separate components: a storage engine and an algorithm execution engine.
 First we create a [trigger](./memgraph/queries/create_trigger.cypher): an algorithm that will be run every time a node is inserted.
-This algorithm calculates and updates the number of neighbours of each affected node after every query is executed.
+This algorithm calculates and updates the number of neighbors of each affected node after every query is executed.
