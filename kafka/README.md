@@ -8,15 +8,12 @@ Since the current Kafka version requires Zookeeper, both Zookeeper and Kafka
 have to be up and running. The following commands are blocking, so please run
 them in different shells.
 
-```bash
-bash run.sh zookeeper
-bash run.sh kafka
-```
-
 Once Kafka is successfully started, we also need to create a topic. The script
 will create a new topic named `topic` or fail if the topic is already there.
 
 ```bash
+bash run.sh zookeeper
+bash run.sh kafka
 bash run.sh topic
 ```
 
