@@ -10,8 +10,8 @@ assignees: ''
 **What's your backend programming language?**
 E.g. Python
 
-What is the throughput of messages coming into the graph? In other words, how many messages per second, hour, or day are coming into the system?
+**What is the throughput of messages coming into the graph? In other words, how many messages per second, hour, or day are coming into the system?**
 E.g. 100/s
 
-What messaging queue are you using?
+**What messaging queue are you using?**
 NATS
