@@ -30,7 +30,7 @@ if [ "$#" -eq 2 ]; then
     memgraph_binary_path="$2"
 fi
 memgraph_docker_image="memgraph/memgraph:latest"
-memgraph_docker_name="memgraph_minimal_streaming_app"
+memgraph_docker_name="memgraph_streaming_app"
 
 execute () {
     action=$1

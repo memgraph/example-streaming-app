@@ -1,14 +1,14 @@
-# Minimal Streaming App 🚀🚀
+# Example Streaming App 🚀🚀
 
 <p align="center">
-    <a href="https://github.com/memgraph/minimal-streaming-app/blob/main/LICENSE" alt="Licence">
-        <img src="https://img.shields.io/github/license/memgraph/minimal-streaming-app" />
+    <a href="https://github.com/memgraph/example-streaming-app/blob/main/LICENSE" alt="Licence">
+        <img src="https://img.shields.io/github/license/memgraph/example-streaming-app" />
     </a>
-    <a href="https://github.com/memgraph/minimal-streaming-app" alt="Languages">
-        <img src="https://img.shields.io/github/languages/count/memgraph/minimal-streaming-app" />
+    <a href="https://github.com/memgraph/example-streaming-app" alt="Languages">
+        <img src="https://img.shields.io/github/languages/count/memgraph/example-streaming-app" />
     </a>
-    <a href="https://github.com/memgraph/minimal-streaming-app/stargazers" alt="Stargazers">
-        <img src="https://img.shields.io/github/stars/memgraph/minimal-streaming-app?style=social" />
+    <a href="https://github.com/memgraph/example-streaming-app/stargazers" alt="Stargazers">
+        <img src="https://img.shields.io/github/stars/memgraph/example-streaming-app?style=social" />
     </a>
 </p>
 
