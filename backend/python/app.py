@@ -72,7 +72,6 @@ def process(message: str, db: Memgraph):
 if __name__ == "__main__":
     logging.basicConfig(
         filename="info.log",
-        encoding="utf-8",
         level=logging.INFO,
         format="%(levelname)s: %(asctime)s %(message)s",
     )
