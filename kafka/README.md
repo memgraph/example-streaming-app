@@ -40,3 +40,8 @@ command|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
 - fields - string in form of a json/python dictionary representing the
          properties of a node or edge:
     `{age: 53}` or `{id: 4, name: "hero", alive: true}`
+
+## How to run the streaming producer?
+
+1. Install requirements `pip install -r requirements.txt`
+2. Run Python producer script `python producer/stream_producer.py`
