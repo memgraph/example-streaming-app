@@ -35,7 +35,7 @@ memgraph_docker_name="memgraph_streaming_app"
 execute () {
     action=$1
     if [ -f "$script_dir/queries/$action.cypher" ]; then
-        cat < "$script_dir/queries/$action.cypher" | docker run -i --rm --network host --entrypoint mgconsole "$memgraph_docker_image" || memgraph_help_and_exit
+        cat < "$script_dir/queries/$action.cypher" | docker run --pull always -i --rm --network host --entrypoint mgconsole "$memgraph_docker_image" || memgraph_help_and_exit
     else
         script_help_and_exit
     fi
