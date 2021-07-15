@@ -27,8 +27,8 @@ for i in count():
             print(message)
     producer.send(
         'topic',
-        f'node|{label1}|{fields1}|{{}}'.encode('utf-8')
+        f'node|{label1}|{fields1}|{{name: "person"}}'.encode('utf-8')
     )
-    print(f'node|{label1}|{fields1}|{{}}')
+    print(f'node|{label1}|{fields1}|{{name: "person"}}')
     producer.flush()
     sleep(4)
