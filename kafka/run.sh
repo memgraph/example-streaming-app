@@ -4,7 +4,7 @@ set -Eeuo pipefail
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 help_and_exit () {
-    echo "USAGE: $0 zookeeper|kafka|topic|producer|consumer"
+    echo "USAGE: $0 zookeeper|kafka|topic|producer|consumer|offsets"
     exit 1
 }
 
@@ -24,8 +24,8 @@ if [ ! -d "$kafka_dir" ]; then
 fi
 zookeeper_config="$kafka_dir/config/zookeeper.properties"
 kafka_config="$kafka_dir/config/server.properties"
-kafka_endpoint="localhost:9092"
-topic_name="topic"
+kafka_endpoint="${KAFKA_ENDPOINT:-localhost:9092}"
+topic_name="${KAFKA_TOPIC:-topic}"
 
 case "$action" in
     consumer)
@@ -51,6 +51,11 @@ case "$action" in
     zookeeper)
         cd "$kafka_dir/bin" || help_and_exit
         ./zookeeper-server-start.sh "$zookeeper_config"
+    ;;
+
+    offsets)
+        cd "$kafka_dir/bin" || help_and_exit
+        ./kafka-run-class.sh kafka.tools.GetOffsetShell --topic "$topic_name" --bootstrap-server "$kafka_endpoint"
     ;;
 
     *)
