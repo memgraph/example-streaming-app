@@ -35,11 +35,17 @@ fn payload_vector(payload: &str) -> Option<Vec<String>> {
 
 fn execute_and_fetchall(query: &str, memgraph: &mut Connection) {
     match memgraph.execute(query, None) {
-        Ok(_) => {}
+        Ok(columns) => {
+            println!("{}", columns.join(", "));
+        }
         Err(err) => panic!("{}", err),
     };
     match memgraph.fetchall() {
-        Ok(_) => {}
+        Ok(result) => {
+            for record in result {
+                println!("{:?}", record.values);
+            }
+        }
         Err(err) => panic!("{}", err),
     };
     match memgraph.commit() {
@@ -55,6 +61,11 @@ fn store_memgraph(payload: &Vec<String>, memgraph: &mut Connection) {
                 let add_node_query =
                     format!("merge (a:{} {}) set a += {};", label, unique_fields, fields);
                 execute_and_fetchall(&add_node_query, memgraph);
+                let get_node_query = format!(
+                    "match (a:{} {}) return a.neighbors as n;",
+                    label, unique_fields
+                );
+                execute_and_fetchall(&get_node_query, memgraph);
             } else {
                 panic!("Got something that looks like node but it's not a node!");
             }
@@ -70,7 +81,9 @@ fn store_memgraph(payload: &Vec<String>, memgraph: &mut Connection) {
                 panic!("Got something that looks like edge but it's not an edge!");
             }
         }
-        _ => {}
+        _ => {
+            println!("Payload is not recognized!");
+        }
     }
 }
 
