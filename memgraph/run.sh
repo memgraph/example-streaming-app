@@ -48,6 +48,16 @@ init () {
     execute create_update_neighbors_trigger
 }
 
+drop () {
+    set +e
+    execute drop_data
+    execute drop_index
+    execute drop_constraint
+    execute drop_node_trigger
+    execute drop_update_neighbors_trigger
+    set +e
+}
+
 case "$action" in
     memgraph)
         docker run -d --rm --network host --name "$memgraph_docker_name" "$memgraph_docker_image"
@@ -62,6 +72,10 @@ case "$action" in
 
     init)
         init
+    ;;
+
+    drop)
+        drop
     ;;
 
     *)
