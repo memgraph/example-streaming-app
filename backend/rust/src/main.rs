@@ -4,6 +4,7 @@ use std::thread;
 
 use chrono::prelude::*;
 use clap::{App, Arg};
+use csv::ReaderBuilder;
 use env_logger::fmt::Formatter;
 use env_logger::Builder;
 use rdkafka::client::ClientContext;
@@ -14,6 +15,64 @@ use rdkafka::error::KafkaResult;
 use rdkafka::message::{Headers, Message};
 use rdkafka::topic_partition_list::TopicPartitionList;
 use rdkafka::util::get_rdkafka_version;
+use rsmgclient::{ConnectParams, Connection, SSLMode};
+
+fn payload_vector(payload: &str) -> Option<Vec<String>> {
+    let mut rdr = ReaderBuilder::new()
+        .has_headers(false)
+        .delimiter(b'|')
+        .from_reader(payload.as_bytes());
+    for record in rdr.records() {
+        match record {
+            Ok(row) => {
+                return Some(row.iter().map(|s| s.to_string()).collect());
+            }
+            Err(e) => panic!("{}", e),
+        }
+    }
+    None
+}
+
+fn execute_and_fetchall(query: &str, memgraph: &mut Connection) {
+    match memgraph.execute(query, None) {
+        Ok(_) => {}
+        Err(err) => panic!("{}", err),
+    };
+    match memgraph.fetchall() {
+        Ok(_) => {}
+        Err(err) => panic!("{}", err),
+    };
+    match memgraph.commit() {
+        Ok(_) => {}
+        Err(err) => panic!("{}", err),
+    }
+}
+
+fn store_memgraph(payload: &Vec<String>, memgraph: &mut Connection) {
+    match &payload[..] {
+        [command, label, unique_fields, fields] => {
+            if command == "node" {
+                let add_node_query =
+                    format!("merge (a:{} {}) set a += {};", label, unique_fields, fields);
+                execute_and_fetchall(&add_node_query, memgraph);
+            } else {
+                panic!("Got something that looks like node but it's not a node!");
+            }
+        }
+        [command, label1, unique_fields1, edge_type, edge_fields, label2, unique_fields2] => {
+            if command == "edge" {
+                let add_edge_query = format!(
+                    "merge (a:{} {}) merge (b:{} {}) merge (a)-[:{} {}]->(b);",
+                    label1, unique_fields1, label2, unique_fields2, edge_type, edge_fields
+                );
+                execute_and_fetchall(&add_edge_query, memgraph);
+            } else {
+                panic!("Got something that looks like edge but it's not an edge!");
+            }
+        }
+        _ => {}
+    }
+}
 
 pub fn setup_logger(log_thread: bool, rust_log: Option<&str>) {
     let output_format = move |formatter: &mut Formatter, record: &Record| {
@@ -70,7 +129,7 @@ impl ConsumerContext for CustomContext {
 // A type alias with your custom consumer can be created for convenience.
 type LoggingConsumer = StreamConsumer<CustomContext>;
 
-async fn consume_and_print(brokers: &str, group_id: &str, topics: &[&str]) {
+async fn consume(brokers: &str, group_id: &str, topics: &[&str], memgraph: &mut Connection) {
     let context = CustomContext;
 
     let consumer: LoggingConsumer = ClientConfig::new()
@@ -109,6 +168,11 @@ async fn consume_and_print(brokers: &str, group_id: &str, topics: &[&str]) {
                         info!("  Header {:#?}: {:?}", header.0, header.1);
                     }
                 }
+
+                if let Some(command) = payload_vector(payload) {
+                    store_memgraph(&command, memgraph);
+                }
+
                 consumer.commit_message(&m, CommitMode::Async).unwrap();
             }
         };
@@ -162,5 +226,16 @@ async fn main() {
     let brokers = matches.value_of("brokers").unwrap();
     let group_id = matches.value_of("group-id").unwrap();
 
-    consume_and_print(brokers, group_id, &topics).await
+    // Make a connection to the database.
+    let connect_params = ConnectParams {
+        host: Some(String::from("localhost")),
+        sslmode: SSLMode::Disable,
+        ..Default::default()
+    };
+    let mut connection = match Connection::connect(&connect_params) {
+        Ok(c) => c,
+        Err(err) => panic!("{}", err),
+    };
+
+    consume(brokers, group_id, &topics, &mut connection).await
 }
