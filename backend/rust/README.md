@@ -1,4 +1,4 @@
-# Node.js Minimal Streaming App
+# Minimal Streaming App
 
 ## How it works
 
