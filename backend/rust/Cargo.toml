@@ -1,0 +1,17 @@
+[package]
+name = "rust"
+version = "0.1.0"
+authors = ["Marko Budiselic <marko.budiselic@memgraph.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.19"
+clap = "2.33.3"
+env_logger = "0.8.4"
+log = "0.4.14"
+rdkafka = "0.26.0"
+tokio = { version = "1.8.0" , features = ["full"] }
+rsmgclient = "0.1.1"
+csv = "1.1.6"
