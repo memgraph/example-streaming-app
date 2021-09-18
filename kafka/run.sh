@@ -4,7 +4,7 @@ set -Eeuo pipefail
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 help_and_exit () {
-    echo "USAGE: $0 build|consumer|kafka|producer|topic|zookeeper"
+    echo "USAGE: $0 zookeeper|kafka|topic|producer|consumer|offsets"
     exit 1
 }
 
@@ -16,19 +16,18 @@ fi
 action="$1"
 kafka_dir="$script_dir/kafka"
 if [ ! -d "$kafka_dir" ]; then
+    echo "Downloading kafka..."
     git clone git@github.com:apache/kafka.git "$kafka_dir"
+    echo "Building kafka..."
+    cd "$kafka_dir" || help_and_exit
+    ./gradlew jar -PscalaVersion=2.13.6
 fi
 zookeeper_config="$kafka_dir/config/zookeeper.properties"
 kafka_config="$kafka_dir/config/server.properties"
-kafka_endpoint="localhost:9092"
-topic_name="topic"
+kafka_endpoint="${KAFKA_ENDPOINT:-localhost:9092}"
+topic_name="${KAFKA_TOPIC:-topic}"
 
 case "$action" in
-    build)
-        cd "$kafka_dir" || help_and_exit
-        ./gradlew jar -PscalaVersion=2.13.6
-    ;;
-
     consumer)
         cd "$kafka_dir/bin" || help_and_exit
         ./kafka-console-consumer.sh --topic "$topic_name" --from-beginning --bootstrap-server "$kafka_endpoint"
@@ -52,6 +51,11 @@ case "$action" in
     zookeeper)
         cd "$kafka_dir/bin" || help_and_exit
         ./zookeeper-server-start.sh "$zookeeper_config"
+    ;;
+
+    offsets)
+        cd "$kafka_dir/bin" || help_and_exit
+        ./kafka-run-class.sh kafka.tools.GetOffsetShell --topic "$topic_name" --bootstrap-server "$kafka_endpoint"
     ;;
 
     *)
