@@ -1,4 +1,4 @@
-# Minimal Streaming App
+# Example Streaming App
 
 ## How it works
 
