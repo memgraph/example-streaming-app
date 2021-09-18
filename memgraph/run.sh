@@ -55,7 +55,7 @@ drop () {
     execute drop_constraint
     execute drop_node_trigger
     execute drop_update_neighbors_trigger
-    set +e
+    set -e
 }
 
 case "$action" in
