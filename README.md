@@ -28,11 +28,12 @@ Install [Kafka](./kafka) and [Memgraph](./memgraph) using the instructions in th
 Then choose a programming language from the list of supported languages and follow the instructions given there.
 
 ### List of supported programming languages
+- [c#](./backend/cs)
+- [go](./backend/go)
+- [java](./backend/java)
 - [node](./backend/node)
 - [python](./backend/python)
-- [java](./backend/java)
-- [go](./backend/go)
-- [c#](./backend/cs)
+- [rust](./backend/rust)
 
 ## How does it work *exactly*
 ### KafkaProducer
