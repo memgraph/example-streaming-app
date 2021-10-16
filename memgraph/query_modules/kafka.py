@@ -16,7 +16,7 @@ def transform(
         edge_type - string: type of an edge e.g. "CONNECTED_WITH"
         fields - string in form of a json/python dictionary representing the
                 properties of a node or edge:
-            `{age: 53}` or `{id: 4, name: "hero", alive: true}`
+                    `{age: 53}` or `{id: 4, name: "hero", alive: true}`
     """
     result_queries = []
 
@@ -28,7 +28,6 @@ def transform(
 
         if command == "node":
             label, unique_fields, fields = payload
-
             result_queries.append(
                 mgp.Record(
                     query=f"merge (a:{label} {unique_fields}) set a += {fields}",

@@ -17,12 +17,6 @@ func main() {
 	}
 	defer driver.Close()
 
-	cypherNodeCommand := "MERGE (node:%s %s) " +
-		"SET node += %s"
-	cypherEdgeCommand := "MERGE (node1:%s %s) " +
-		"MERGE (node2:%s %s) " +
-		"MERGE (node1)-[:%s %s]->(node2)"
-
 	kafkaReader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{"localhost:9092"},
 		Topic:    "topic",
@@ -30,7 +24,6 @@ func main() {
 		MaxBytes: 10e6,
 	})
 	defer kafkaReader.Close()
-kafkaLoop:
 	for {
 		kafkaMessage, err := kafkaReader.ReadMessage(context.Background())
 		if err != nil {
@@ -38,22 +31,8 @@ kafkaLoop:
 			break
 		}
 		message := string(kafkaMessage.Value)
-		cypherCommand := ""
 		arr := strings.Split(message, "|")
 
-		switch arr[0] {
-		case "node":
-			cypherCommand = fmt.Sprintf(cypherNodeCommand, arr[1], arr[2], arr[3])
-		case "edge":
-			cypherCommand = fmt.Sprintf(cypherEdgeCommand, arr[1], arr[2], arr[5], arr[6], arr[3], arr[4])
-		default:
-			fmt.Printf("invalid kafka message: `%s`", message)
-			break kafkaLoop
-		}
-		_, err = runCypherCommand(driver, cypherCommand)
-		if err != nil {
-			panic(err)
-		}
 		if arr[0] == "node" {
 			result, err := runCypherCommand(
 				driver,

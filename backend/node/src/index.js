@@ -1,17 +1,5 @@
 /**
- * This is a generic Kafka Consumer that will enable you to store data from
- * Kafka to Memgraph.
- *
- * The data pushed to Kafka has to be in the following format:
- *   command|label|unique_fields|fields
- *   command|label1|unique_fields1|edge_type|edge_fields|label2|unique_fields2
- *
- * command - string: "edge", or "node"
- * label - string: type(s) of a node e.g. "Person", or "Machine:Vehicle:Car"
- * edge_type - string: type of an edge e.g. "CONNECTED_WITH"
- * fields - string in form of a json/python dictionary representing the
- *          properties of a node or edge:
- *   `{age: 53}` or `{id: 4, name: "hero", alive: true}`
+ * This is a generic Kafka Consumer + an example express app.
  */
 const express = require('express');
 const app = express();
@@ -56,18 +44,6 @@ async function runConsumer() {
                  \n  - partition ${partition} \
                  \n  - offset ${offset}. \
                  \nUpdated total count to ${++kafkaCounter}`);
-      const [type, ...rest] = value.toString().split('|');
-      const session = driver.session();
-      if (type === 'node') {
-        const [label, uniqueFields, fields] = rest;
-        await session.run(`MERGE (n:${label} ${uniqueFields}) SET n += ${fields};`);
-      } else if (type === 'edge') {
-        const [n1l, n1u, edgeType, edgeFields, n2l, n2u] = rest;
-        await session.run(`MERGE (n1:${n1l} ${n1u}) MERGE (n2:${n2l} ${n2u}) \
-                         MERGE (n1)-[:${edgeType} ${edgeFields}]->(n2);`);
-      } else {
-        throw new Error('Unknown message type.');
-      }
     }),
   );
 }

@@ -69,15 +69,14 @@ case "$action" in
           -v "$script_dir/query_modules:/query_modules" \
           "$memgraph_docker_image" \
           --query-modules-directory="/usr/lib/memgraph/query_modules,/query_modules" \
-          --kafka-bootstrap-servers "$kafka_endpoint"
+          --kafka-bootstrap-servers "$kafka_endpoint" --also-log-to-stderr --log-level=TRACE
         echo "Starting memgraph..."
         sleep 1
         init
     ;;
 
     memgraph_binary)
-        # TODO(gitbuda): Fix memgraph_binary command.
-        sudo runuser -l memgraph -c "$memgraph_binary_path --log-level=DEBUG --also-log-to-stderr"
+        sudo runuser -l memgraph -c "$memgraph_binary_path --log-level=TRACE --also-log-to-stderr --query-modules-directory=/usr/lib/memgraph/query_modules,$script_dir/query_modules --kafka-bootstrap-servers $kafka_endpoint"
     ;;
 
     init)
