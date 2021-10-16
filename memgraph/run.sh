@@ -66,7 +66,8 @@ case "$action" in
     memgraph)
         docker run -d --rm --network host \
           --name "$memgraph_docker_name" \
-          -v "$script_dir/query_modules:/query_modules" "$memgraph_docker_image" \
+          -v "$script_dir/query_modules:/query_modules" \
+          "$memgraph_docker_image" \
           --query-modules-directory="/usr/lib/memgraph/query_modules,/query_modules" \
           --kafka-bootstrap-servers "$kafka_endpoint"
         echo "Starting memgraph..."
