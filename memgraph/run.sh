@@ -31,6 +31,7 @@ if [ "$#" -eq 2 ]; then
 fi
 memgraph_docker_image="memgraph/memgraph:latest"
 memgraph_docker_name="memgraph_streaming_app"
+kafka_endpoint="localhost:9092"
 
 execute () {
     action=$1
@@ -46,6 +47,8 @@ init () {
     execute create_constraint
     execute create_node_trigger
     execute create_update_neighbors_trigger
+    execute create_stream
+    execute start_stream
 }
 
 drop () {
@@ -55,18 +58,20 @@ drop () {
     execute drop_constraint
     execute drop_node_trigger
     execute drop_update_neighbors_trigger
+    execute drop_stream
     set -e
 }
 
 case "$action" in
     memgraph)
-        docker run -d --rm --network host --name "$memgraph_docker_name" "$memgraph_docker_image"
+        docker run -d --rm --network host --name "$memgraph_docker_name" -v "$script_dir/query_modules:/query_modules" "$memgraph_docker_image" --query-modules-directory="/usr/lib/memgraph/query_modules,/query_modules" --kafka-bootstrap-servers "$kafka_endpoint"
         echo "Starting memgraph..."
         sleep 1
         init
     ;;
 
     memgraph_binary)
+        # TODO(gitbuda): Fix memgraph_binary command.
         sudo runuser -l memgraph -c "$memgraph_binary_path --log-level=DEBUG --also-log-to-stderr"
     ;;
 
