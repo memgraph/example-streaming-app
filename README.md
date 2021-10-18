@@ -14,14 +14,14 @@
 
 This repository serves as a point of reference when developing a streaming application with [Memgraph](https://memgraph.com) and a message broker such as [Kafka](https://kafka.apache.org).
 
-![drawing](https://i.imgur.com/5YMlN8M.png)
+![Minimal Streaming App](https://user-images.githubusercontent.com/4950251/137716232-980dffda-a5d5-4ff0-9b5c-4e433c977474.png)
 
 *KafkaProducer* represents the source of your data.
 That can be transactions, queries, metadata or something different entirely.
 In this minimal example we propose using a [special string format](./kafka) that is easy to parse.
 The data is sent from the *KafkaProducer* to *Kafka* under a topic aptly named *topic*.
 The *Backend* implements a *KafkaConsumer*.
-It takes data from *Kafka*, parses it and sends it to *Memgraph* for graph analysis, feature extraction or storage.
+It takes data from *Kafka*, consumes it, but also queries *Memgraph* for graph analysis, feature extraction or storage.
 
 ## Installation
 Install [Kafka](./kafka) and [Memgraph](./memgraph) using the instructions in the homonymous directories.
