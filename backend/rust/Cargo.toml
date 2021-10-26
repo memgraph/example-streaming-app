@@ -13,5 +13,5 @@ env_logger = "0.8.4"
 log = "0.4.14"
 rdkafka = "0.26.0"
 tokio = { version = "1.8.0" , features = ["full"] }
-rsmgclient = "0.1.1"
+rsmgclient = "1.0.0"
 csv = "1.1.6"

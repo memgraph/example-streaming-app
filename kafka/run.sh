@@ -10,7 +10,7 @@ help_and_exit () {
 
 cd "$script_dir" || help_and_exit
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     help_and_exit
 fi
 action="$1"

@@ -16,11 +16,6 @@ import org.neo4j.driver.TransactionWork;
 
 public class App {
   public static void main(String[] args) throws Exception {
-    String nodeQuery = "MERGE (node:%s %s) "
-                       + "SET node += %s";
-    String edgeQuery = "MERGE (node1:%s %s) "
-                       + "MERGE (node2:%s %s) "
-                       + "MERGE (node1)-[:%s %s]->(node2)";
 
     try (Driver driver = GraphDatabase.driver("bolt://localhost:7687");
          Session session = driver.session();
@@ -38,8 +33,6 @@ public class App {
               public String execute(Transaction tx) {
                 switch (command[0]) {
                 case "node":
-                  tx.run(String.format(nodeQuery, command[1], command[2],
-                                       command[3]));
                   Result result = tx.run(String.format(
                       "MATCH (node:%s %s) RETURN node.neighbors AS neighbors",
                       command[1], command[2]));
@@ -47,15 +40,6 @@ public class App {
                                     command[1], command[2],
                                     result.single().get(0).asInt());
                   break;
-                case "edge":
-                  tx.run(String.format(edgeQuery, command[1], command[2],
-                                       command[5], command[6], command[3],
-                                       command[4]));
-                  break;
-                default:
-                  System.out.printf("Error: unknown command `%s`\n",
-                                    record.value());
-                  return null;
                 }
                 System.out.printf("%s\n", record.value());
                 return null;

@@ -54,13 +54,10 @@ fn execute_and_fetchall(query: &str, memgraph: &mut Connection) {
     }
 }
 
-fn store_memgraph(payload: &Vec<String>, memgraph: &mut Connection) {
+fn process(payload: &Vec<String>, memgraph: &mut Connection) {
     match &payload[..] {
-        [command, label, unique_fields, fields] => {
+        [command, label, unique_fields, _fields] => {
             if command == "node" {
-                let add_node_query =
-                    format!("merge (a:{} {}) set a += {};", label, unique_fields, fields);
-                execute_and_fetchall(&add_node_query, memgraph);
                 let get_node_query = format!(
                     "match (a:{} {}) return a.neighbors as n;",
                     label, unique_fields
@@ -68,17 +65,6 @@ fn store_memgraph(payload: &Vec<String>, memgraph: &mut Connection) {
                 execute_and_fetchall(&get_node_query, memgraph);
             } else {
                 panic!("Got something that looks like node but it's not a node!");
-            }
-        }
-        [command, label1, unique_fields1, edge_type, edge_fields, label2, unique_fields2] => {
-            if command == "edge" {
-                let add_edge_query = format!(
-                    "merge (a:{} {}) merge (b:{} {}) merge (a)-[:{} {}]->(b);",
-                    label1, unique_fields1, label2, unique_fields2, edge_type, edge_fields
-                );
-                execute_and_fetchall(&add_edge_query, memgraph);
-            } else {
-                panic!("Got something that looks like edge but it's not an edge!");
             }
         }
         _ => {
@@ -183,7 +169,7 @@ async fn consume(brokers: &str, group_id: &str, topics: &[&str], memgraph: &mut 
                 }
 
                 if let Some(command) = payload_vector(payload) {
-                    store_memgraph(&command, memgraph);
+                    process(&command, memgraph);
                 }
 
                 consumer.commit_message(&m, CommitMode::Async).unwrap();
