@@ -1,2 +1,1 @@
-kafka-python==2.0.2
 git+https://github.com/memgraph/gqlalchemy.git@add-create-stream
