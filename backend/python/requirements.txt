@@ -1,2 +1,2 @@
-kafka-python
-gqlalchemy
+kafka-python==2.0.2
+gqlalchemy==1.0.8

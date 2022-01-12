@@ -1,1 +1,1 @@
-CREATE STREAM kafkaStream TOPICS topic TRANSFORM kafka.transform;
+CREATE KAFKA STREAM kafkaStream TOPICS topic TRANSFORM kafka_stream.transform;
