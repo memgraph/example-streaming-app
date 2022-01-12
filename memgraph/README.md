@@ -10,3 +10,8 @@ creates required indexes, constraints, and triggers.
 ```bash
 bash run.sh memgraph
 ```
+
+## NOTES
+
+Memgraph transform script inside `query_modules` can NOT be called `kafka.py`
+because of a conflict with the `KAFKA` clause.

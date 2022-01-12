@@ -11,6 +11,7 @@ script_help_and_exit () {
     echo "    action - takes a filename (excluding the extension) from the"
     echo "             queries directory. The file contains a query that will"
     echo "             be executed in the running Memgraph instance"
+    echo "    init_gqlalchemy - initializes Memgraph using GQLAlchmey"
     exit 1
 }
 
@@ -81,6 +82,10 @@ case "$action" in
 
     init)
         init
+    ;;
+
+    init_gqlalchemy)
+        python3 gqlalchmey/main.py
     ;;
 
     drop)
